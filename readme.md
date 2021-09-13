@@ -80,6 +80,34 @@ void windZManipulation() {
 ![image](https://user-images.githubusercontent.com/42025441/133143069-0b21b8a7-e75a-4b6b-a99d-e3ee2d44e3e2.png)
 
 
+# Marching cubes algorithm
+
+In order to be able to simulate any fluid usually the marching cubes algorithm is followed with variations. One variation is the metaballs which could lead to higher performance for example. 
+In the lab.cpp source file the MarchingCube algorithm is written, but yet again nowhere called due to exception errors in the current implementation.
+
+<code>
+	float MarchingCubes(float x, float y, float z, float r, vec4 c) 
+	{
+		float value, distanceSquared;
+		float resultSquared = r * r;
+
+		//Finding the distance between particle position c and the evaluation point (x,y,z)
+		distanceSquared /= resultSquared;
+
+		//Optimization function - metaball approach
+		value = distanceSquared * distanceSquared - distanceSquared + 0.25f;
+
+		if (distanceSquared > height_threshold) 
+		{
+			value = 0.0f;
+		}
+
+	return value;
+	
+	}
+	
+
+	
 
 # Random function
 In the Random.cpp and Random.h, a better a approach to generating random numbers is achieved via distribution pools affected by the device seeds. 
