@@ -1,0 +1,51 @@
+#version 330 core
+
+out vec4 fragmentColor;
+
+in vec2 UV;
+in vec4 vertexPosition_worldspace;
+in vec4 vertex_position_cameraspace;
+in vec4 vertex_normal_cameraspace;
+
+
+//texture
+uniform sampler2D texture0;
+
+//light
+uniform vec4 La,Ld,Ls;
+uniform vec3 lightPosition_worldspace;
+
+//material
+uniform vec4 Ka,Kd,Ks;
+
+
+void phong(){
+	vec4 normal =normalize(vertex_normal_cameraspace);
+		vec4 toCamera=normalize(-vertex_position_cameraspace);
+		vec4 toLight = normalize(lightPosition_worldspace-vertexPosition_worldspace);
+
+		//Ambient intensity
+		vec4 Ia = La * Ka;
+
+		//Diffuse intensity
+		float diffuse = max(dot(toLight, normal), 0.0);
+		vec4 Id= Ld * Kd * diffuse;
+
+		//Specular intensity
+		vec4 blinnPhong= normalize(toCamera+toLight); //Blinn-Phong method
+		float specular = max(dot(blinnPhong, normal), 0.0);
+		specular = pow(specular,3); //specular exponent = 3
+		vec4 Is=Ls*Ks*specular;
+
+		fragmentColor = vec4(Is+Id+Ia);
+}
+
+void main() {
+    
+	
+	//phong();
+	fragmentColor = vec4(texture(texture0, UV).rgb, 1.0f);
+
+	
+	//fragmentColor = vec4(0.8f, 1f, 0.1f, 1f);
+}

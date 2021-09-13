@@ -1,0 +1,65 @@
+// vertex_normal_modelspace and vertex_UV coordinates)
+in vec2 UV;
+in vec4 vertexPosition_worldspace;
+
+in vec3 vertex_position_cameraspace;
+in vec3 vertex_normal_cameraspace;
+
+// uniform variables (lightPosition_worldspace, V, M)
+uniform vec3 light_position_cameraspace;
+uniform mat4 V;
+
+out vec4 fragmentColor;
+
+
+
+vec4 fresnel(float n1, float n2, vec3 normal, vec3 eventRefl) {
+
+	vec3 reflected = reflect(eventRefl, normal);
+	vec3 refracted = refract(eventRefl, normal, n1/n2);
+
+	float r1 = n1 / n2;
+	float c = dot(normal, reflected) * r1;
+	float g = sqrt(1.0 + (c * c) - (r1 * r1));
+
+	float fresnelVal = 0.5*((g - c) / (g + c)) * ((g - c) / (g + c))*(1 + (((c*(g + c) - (r1*r1)) / (c*(g - c) + (r1*r1)))
+		*(c*(g + c) - (r1*r1)) / (c*(g - c) + (r1*r1))));
+
+	float reflectedVal = fresnelVal;
+	float refractedVal = 1 - fresnelVal;
+
+	
+	vec3 reflectedColor=vec3(texture(modelMatrix, reflected));
+	vec3 refractedColor=vec3(texture(modelMatrix, refracted));
+
+	vec4 colorOutput = vec4((reflectedColor*reflectedVal)+(refractedColor*refractedVal), 1.0f);
+	return colorOutput;
+}
+
+
+vec4 schicks(float n1, float n2, vec3 normal, vec3 eventRefl) {
+
+	float R0=(n1-n2)+(n1+n2);
+	R0=R0*R0;
+
+	vec3 costheta=dot(normal, eventRefl);
+	float fresnelVal=R0+(1-R0)*pow(1-costheta,5.0);
+	float reflectedVal=fresnelVal;
+	float refractedVal=1-fresnelVal;
+
+	
+	vec4 colorOutput = vec4((reflectedColor*reflectedVal)+(refractedColor*refractedVal), 1.0f);
+	return colorOutput;
+}
+
+void main() {
+	float n1 = 1.0f; //air index value
+	float n2 = 1.333f; //water index value
+
+	//View matrix --> Camera space
+	vec3 reflEvent = normalize(vertex_position_cameraspace);
+	vec3 normal = normalize(vertex_normal_cameraspace);
+	vec4 color = fresnel(n1, n2, normal, reflEvent);
+
+	//	vec4 color = schicks(n1, n2, normal, reflEvent);
+}

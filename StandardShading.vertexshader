@@ -1,0 +1,55 @@
+#version 330 core
+
+// input vertex, UV coordinates and normal
+layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 1) in vec3 vertexNormal_modelspace;
+layout(location = 2) in vec2 vertexUV;
+
+
+// model view projection matrix 
+uniform mat4 MVP;
+uniform mat4 P;
+uniform mat4 V;
+uniform mat4 M;
+uniform mat4 T;
+uniform mat4 S;
+uniform mat4 R;
+
+// Propagating vertex coordinates (world space) to fragment shader
+out vec4 vertexPosition_worldspace;
+out vec3 vertex_position_cameraspace;
+out vec3 vertex_normal_cameraspace;
+out vec2 UV;
+
+void main() {
+	
+	// Output position of the vertex, in clip space : MVP * position
+    //gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+	
+	//propagate the UV coordinates   
+    //UV = vertexUV;
+
+	//propagate the position of the vertex to fragment shader
+    //vertex_position_cameraspace = vec3(MVP*vec4(vertexPosition_modelspace, 1.0));
+
+	//propagate the normal of the vertex to fragment shader
+    //vertex_normal_cameraspace = vec3(MVP*vec4(vertexNormal_modelspace, 1.0)); 
+
+
+	//MODEL STUFF - Scale, Rotate, Translate is the order in source files, but in the opposite way in shaders
+	//vec4 coordinates_modelspace = vec4(vertexPosition_modelspace, 1.0);
+	//vertexPosition_worldspace = T*S*M  * coordinates_modelspace;
+	//gl_Position = P*V*T*S*M * coordinates_modelspace; // assign vertex position
+
+	
+    // vertex position
+
+    UV = vertexUV;
+
+    gl_Position =  P * V * T * S  * vec4(vertexPosition_modelspace, 1);
+
+    //gl_Position = MVP*vec4(vertexPosition_modelspace, 1.0)); 
+
+
+
+}
