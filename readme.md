@@ -28,7 +28,7 @@ Model created via Unity, Tangram Heightmapper (https://tangrams.github.io/height
 
 
 # First view
-At first place the user sees the screen with the fog extended all over the scene view. Moving around with the key arrows we are able to approach the mountain in a scenematic way. Initial number of particles can be increased by pressing M or decressed by pressing L.
+At first place the user sees the screen with the fog extended all over the scene view. Moving around with the key arrows we are able to approach the mountain in a scenematic way. Initial number of particles can be increased by pressing M or decressed by pressing L - changing the particle life attribute in our particle system.
 Raindrops are falling vertically in our scene and are simulated using a sphere with an added water png as texture. By fixing the transparency of the droplet in particle.fragmentshader more realistic results are achieved. Also, the raindrops are of a random mass. 
 
 ![image](https://user-images.githubusercontent.com/42025441/133143765-f80946cc-c7f0-48b0-9dde-b1e6986dfecf.png)
@@ -127,22 +127,32 @@ Added in the standard fragment shader.
 
 # Camera
   
-  Camera::Camera(GLFWwindow* window) : window(window) 
+  Camera::Camera(GLFWwindow* window) : window(window) 	
   {
+	
     position = glm::vec3(0, 0, 40);
+	
     horizontalAngle = 3.14f;
+	
     verticalAngle = 0.0f;
+	
     FoV = 67.0f;
+	
     speed = 3.0f;
+	
     mouseSpeed = 0.001f;
+	
     fovSpeed = 2.0f;
+	
   }
   
   
   Finding the projection matrix using the matrices defined in theory. What is important to be mentioned is the clipping plane numbers, due to the model designed and implemented in the project. Usually the field of view works in 67 degrees (fixed to radians following the camera methods described by Anton Gerdelan in his book). Nevertheless, the clipping plane is usually set to 0.1f for near and 100.0f for further. In this project, due to the models that is not the case and the process is defined in the code below on how to find the projection matrix.
   
-  float near = 0.001f; // clipping plane
+  	float near = 0.001f; // clipping plane
+	
 	float far = 5400.0f; // clipping plane
+	
 	float aspect = 4 / 3.0f; // aspect ratio
 
 	// matrix components
